@@ -1,0 +1,87 @@
+
+.active {
+	color:red;
+	//background:#F48FB1;
+	background:#FFEB3B;
+}
+
+.width75 {
+	width:80px;
+}
+
+.width15 {
+	width:15px;
+}
+
+.width200 {
+	width:250px;
+}
+
+.font13 .v-label {
+	font-size:14px !important;
+}
+
+.cpointer {
+	cursor:pointer;
+}
+
+.pull-right {
+	position: absolute !important;
+	right: -10px !important;
+	top: -10px !important;
+}
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    /*background:#FFEB3B;*/
+    background:#FDD835;
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(255,0,0,0.4);
+	opacity:0;
+}
+
+.fixed-widgets-layout {
+	position:relative;
+	height:100%;
+	padding-top:200px !important;
+}
+
+.fixed-widget {
+	position:absolute;
+	width:100%;
+	top:0px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: transform 2s ease , opacity 2s linear;
+}
+
+.fade-enter {
+  transform: translateX(-100vw);
+  opacity:0;
+}
+.fade-enter-to {
+  opacity:1;
+}
+
+.fade-leave-to {
+  transform: translateX(100vw);
+  opacity:0;
+}
+.fade-leave {
+  opacity:1;
+}

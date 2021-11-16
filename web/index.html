@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> FDD Projet </title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <!--link rel="stylesheet" href="styles/simple-scrollbar.css" /-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+
+  <div id="app" >
+    <v-app dark>
+
+      <v-toolbar app light ref="tb">
+        <v-toolbar-title class="font-weight-black"> FDD </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <v-btn flat v-on:click="select_tab(1)" v-bind:class="{active: tab==1}">Recherche</v-btn>
+          <v-btn flat v-on:click="select_tab(2)" v-bind:class="{active: tab==2}">Model Booleen</v-btn>
+          <v-btn flat v-on:click="select_tab(3)" v-bind:class="{active: tab==3}">Model Vectoriel</v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+
+      <!--v-content v-if="tab == 1" style="overflow:auto; height:100vh; position:relative"-->
+      <v-content v-if="tab == 1">
+        <v-container fill-height>
+          <v-layout>
+            <v-flex md8 offset-md2 >
+
+              <p>  Insérez le mot que vous cherchez et vous trouverez la liste des documents le contenant: </p>
+
+              <vue-position-sticky :offset-Top="tbh">
+                <v-card class="pa-3" elevation=24>
+                  <v-img
+                      lazy-src="https://picsum.photos/id/11/10/6"
+                      src="cor.png"
+                  ></v-img>
+                  <v-layout>
+                    <v-spacer></v-spacer>
+                  </v-layout>
+                </v-card>
+              </vue-position-sticky>
+              <v-spacer></v-spacer>
+              <v-spacer></v-spacer>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-content>
+      <v-spacer></v-spacer><v-spacer></v-spacer>
+      <v-content v-if="tab == 2">
+        <v-container fill-height>
+          <v-layout>
+            <v-flex md8 offset-md2 >
+
+              <p> Choisissez deux colonnes: </p>
+
+              <vue-position-sticky :offset-Top="tbh">
+                <v-card class="pa-3" elevation=24 v-show="!docdialog">
+                  
+                    <v-container fluid>
+                      <v-row align="center">
+                        <v-col cols="6">
+                          <v-subheader>
+                            Custom items
+                          </v-subheader>
+                        </v-col>
+                  
+                        <v-col cols="6">
+                          <v-select
+                          v-bind:value="select_1"
+                          :items="items"
+                          ></v-select>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-spacer></v-spacer>
+
+                    <v-container fluid>
+                      <v-row align="center">
+                        <v-col cols="6">
+                          <v-subheader>
+                            Custom items
+                          </v-subheader>
+                        </v-col>
+                  
+                        <v-col cols="6">
+                          <v-select
+                          v-bind:value="select_2"
+                          :items="items"
+                          ></v-select>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+
+                  <v-layout>
+                    <v-spacer></v-spacer>
+                    <v-btn light @click="afficher">Afficher</v-btn>
+                    <v-spacer></v-spacer>
+                  </v-layout>
+                </v-card>
+              </vue-position-sticky>
+
+              <div class="mt-0" v-if="booldesc.length != 0">
+                <p class="mt-4"> Les documents satisfaisant la requête "{{boolquery}}" sont:</p>
+                <v-layout wrap align-space-between justify-space-between >
+
+                  <v-flex md6 v-for="d in booldesc" class="px-2">
+                    <v-card class="pa-2 my-2 text-sm-center" @click="open_doc(d)">
+                      <div class="cpointer"> {{d}} </div>
+                    </v-card>
+                  </v-flex md-6>
+
+                </v-layout>
+              </div>
+
+
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-content>
+
+      <v-content v-if="tab == 3">
+        <v-container fill-height>
+          <v-layout>
+            <v-flex md8 offset-md2 >
+
+              <p> Saisissez une requête vectorielle: </p>
+
+              <v-card class="pa-3" elevation=24 >
+                <v-layout wrap>
+                  <v-flex md7 style="position:relative; margin-top:15px;">
+                    <v-btn icon @click="clear_v_query" class="pull-right">
+                      <v-icon>close</v-icon>
+                    </v-btn>
+                    <v-textarea v-model="vectquery" label="Requête" color="#FFEB3B"></v-textarea>
+                  </v-flex>
+                  <v-flex md5>
+                    <v-layout column justify-center align-center >
+                      <v-radio-group v-model="vectmode" color="#FFEB3B">
+                        <v-radio color="#FFEB3B" label="Naive Bayes" class="ma-0 font13" value="1"></v-radio>
+                        <v-radio color="#FFEB3B" label="KNN" class="ma-0 font13" value="2"></v-radio>
+                        <v-radio color="#FFEB3B" label="Logistic Regression" class="ma-0 font13" value="3"></v-radio>
+                        <v-radio color="#FFEB3B" label="Random Forest" class="ma-0 font13" value="4"></v-radio>
+                      </v-radio-group>
+                      <v-btn light @click="process_vectorial">Rechercher</v-btn>
+                    </v-layout>
+                  </v-flex>
+                </v-layout>
+              </v-card>
+
+              <div class="mt-0" v-if="vectdesc.length != 0">
+                <p class="mt-4"> Les documents séléctionnés triés par degré de pertinence sont:</p>
+                <v-card v-for="(d,i) in vectdesc" v-show="shown_in_page(i)" class="pa-2 my-2 text-sm-center cpointer" @click="open_doc(d[0])">
+                  <v-layout align-center justify-space-around row fill-height>
+                    <div class="width15 text-md-right">{{i+1}}</div>
+                    <div class="width75 text-md-right">{{d[0]}}</div>
+                    <div class="width200">Pertinence: {{d[1]}} </div>
+                  </v-layout>
+                </v-card>
+              </div>
+
+              <v-layout wrap align-center justify-center >
+                <v-pagination color="#FFEB3B" v-model="vectpage" :length="vectpages" v-show="vectdesc.length > pagesize" ></v-pagination>
+              </v-layout>
+
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-content>
+
+      <v-dialog v-model="docdialog" light width="500" >
+        <v-card>
+          <v-card-title   class="headline grey lighten-2"  primary-title> Document: {{doc}} </v-card-title>
+          <v-card-text> {{doctext}} </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary"  flat   @click="close_doc" > Fermer </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-footer app light class="pa-4">
+        <div class="item">
+          Université d'artois M2 IA
+        </div>
+        <v-spacer></v-spacer>
+        <div class="item">
+          By Messaouali Abdeslem
+        </div>
+        <v-spacer></v-spacer>
+        <div class="item">
+          {{ new Date().getFullYear() }} /
+          {{ new Date().getFullYear() + 1}}
+        </div>
+      </v-footer>
+
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-position-sticky@0.2.0/dist/vue-position-sticky.umd.min.js"></script>
+  <script type="text/javascript" src="/eel.js"></script>
+  <script type="text/javascript" src="scripts/main.js"></script>
+  <!--script type="text/javascript" src="scripts/simple-scrollbar.js"></script-->
+</body>
+</html>
