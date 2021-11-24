@@ -56,8 +56,8 @@
 
               <p> Choisissez deux colonnes: </p>
 
-              <vue-position-sticky :offset-Top="tbh">
-                <v-card class="pa-3" elevation=24 v-show="!docdialog">
+              <div >
+                <v-card class="pa-3" elevation=24 >
                   
                     <v-container fluid>
                       <v-row align="center">
@@ -69,7 +69,7 @@
                   
                         <v-col cols="6">
                           <v-select
-                          v-bind:value="select_1"
+                          v-model="select_1"
                           :items="items"
                           ></v-select>
                         </v-col>
@@ -87,7 +87,7 @@
                   
                         <v-col cols="6">
                           <v-select
-                          v-bind:value="select_2"
+                          v-model="select_2"
                           :items="items"
                           ></v-select>
                         </v-col>
@@ -96,12 +96,48 @@
 
                   <v-layout>
                     <v-spacer></v-spacer>
-                    <v-btn light @click="afficher">Afficher</v-btn>
+                    <v-dialog v-model="dialog"  width="500" >
+                    <template v-slot:activator="{ on, attrs }">                    
+                          <v-btn v-bind="attrs" v-on="on" light @click="afficher">Afficher</v-btn>
+                    </template>
+                          <v-card>
+                            <v-card-title class="text-h5 grey lighten-2">
+                              Privacy Policy
+                            </v-card-title>
+                    
+                            
+                              <v-img src="pig2.png" :key="key"></v-img>
+                            
+                    
+                            <v-divider></v-divider>
+                    
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                color="primary"
+                                text
+                                @click="dialog = false"
+                              >
+                                I accept
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
                     <v-spacer></v-spacer>
                   </v-layout>
                 </v-card>
+                <v-card class="pa-3" elevation=24 v-show="!docdialog">
+                  
+                  
+              </div>
+              <v-spacer></v-spacer><v-spacer></v-spacer>
+              <div>
+              <vue-position-sticky v-if="img == true">
+                <v-container fluid>
+                  
+                  </v-container>
               </vue-position-sticky>
-
+              </div>
               <div class="mt-0" v-if="booldesc.length != 0">
                 <p class="mt-4"> Les documents satisfaisant la requête "{{boolquery}}" sont:</p>
                 <v-layout wrap align-space-between justify-space-between >
@@ -134,7 +170,28 @@
                     <v-btn icon @click="clear_v_query" class="pull-right">
                       <v-icon>close</v-icon>
                     </v-btn>
-                    <v-textarea v-model="vectquery" label="Requête" color="#FFEB3B"></v-textarea>
+                    <v-text-field v-model="vectquery" label="Requête" color="#FFEB3B"></v-text-field>
+                    <v-col cols="6">
+                      <v-select
+                      v-model="diabet"
+                      item-text="state"
+                      item-value="value"
+                      :items="class_pro"
+                      ></v-select>
+                      <v-col cols="6">
+                        <v-select
+                        v-model="amenea"
+                        item-text="state"
+                        item-value="value"
+                        :items="class_pro"
+                        ></v-select>
+                        <v-col cols="6">
+                          <v-select
+                          v-model="khra"
+                          :items="class_pro"
+                          item-text="state"
+                          item-value="value"
+                          ></v-select>
                   </v-flex>
                   <v-flex md5>
                     <v-layout column justify-center align-center >
@@ -142,9 +199,9 @@
                         <v-radio color="#FFEB3B" label="Naive Bayes" class="ma-0 font13" value="1"></v-radio>
                         <v-radio color="#FFEB3B" label="KNN" class="ma-0 font13" value="2"></v-radio>
                         <v-radio color="#FFEB3B" label="Logistic Regression" class="ma-0 font13" value="3"></v-radio>
-                        <v-radio color="#FFEB3B" label="Random Forest" class="ma-0 font13" value="4"></v-radio>
+                        <v-radio color="#FFEB3B" label="SVC" class="ma-0 font13" value="4"></v-radio>
                       </v-radio-group>
-                      <v-btn light @click="process_vectorial">Rechercher</v-btn>
+                      <v-btn light @click="process_search">Rechercher</v-btn>
                     </v-layout>
                   </v-flex>
                 </v-layout>
@@ -205,6 +262,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vue-position-sticky@0.2.0/dist/vue-position-sticky.umd.min.js"></script>
   <script type="text/javascript" src="/eel.js"></script>
   <script type="text/javascript" src="scripts/main.js"></script>
+
   <!--script type="text/javascript" src="scripts/simple-scrollbar.js"></script-->
 </body>
 </html>
